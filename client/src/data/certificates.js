@@ -32,8 +32,8 @@ const base = [
   // ---- PLACEHOLDER: ganti dengan sertifikat kamu ----
   { id: 'kreasi', title: 'Lomba Kreasi Konten Foto & Video Destinasi Wisata Jakarta by Gubernus DKI Jakarta', badge: 'GOVERNOR', code: 'governor-000009', tag: 'KREASI KONTEN', field: 'kreasi', accent: '#22c55e', image: null, url: '/certs/cert9.png' },
   { id: 'workshop', title: 'Workshop ESET Campus Security Day', badge: 'eset', code: 'eset-000010', tag: 'ESET', field: 'eset', accent: '#ff5c93', image: null, url: '/certs/cert10.png' },
-  { id: 'panitia', title: 'Panitia Debat Semercu Sahabat Bumi vol.2 Nasional by owrite', badge: 'owrite', code: 'owrite-000011', tag: 'DEBAT', field: 'cloud', accent: '#ffc83d', image: null, url: '/certs/cert11.png' },
-  { id: 'webinar', title: 'Webinar Effective Publication Strategies: A Personal Experience Guide', badge: 'WEBINAR', code: 'webinar-000012', tag: 'HEXACOMM', field: 'webinar', accent: '#f0622d', image: null, url: '/certs/cert12.png' },
+  { id: 'hki', title: 'HKI Parenting1stKey', badge: 'hki', code: 'hki-001', tag: 'HKI', field: 'hki', accent: '#ffc83d', image: null, url: '/certs/cert11.png' },
+  { id: 'hki', title: 'HKI DonasiYuk', badge: 'hki', code: 'hki-002', tag: 'HKI', field: 'hki', accent: '#f0622d', image: null, url: '/certs/cert12.png' },
 ]
 
 export const certs = base.map((c, i) => ({ ...c, image: pick(i + 1) }))
