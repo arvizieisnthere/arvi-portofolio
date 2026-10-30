@@ -1,0 +1,91 @@
+/* ============================================================
+   SECTION 3 — PROJECTS (katalog + filter)
+   ============================================================ */
+.pj { max-width: 1480px; margin: 0 auto; padding: clamp(40px, 6vw, 88px) clamp(20px, 4vw, 48px) clamp(64px, 8vw, 120px); }
+.pj__head { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 24px 56px; align-items: end; margin-bottom: 28px; }
+.pj__eyebrow { margin: 0 0 10px; font: 700 0.8rem/1 var(--font-mono); letter-spacing: 0.1em; color: var(--blue); }
+.pj__title { margin: 0; font: 800 clamp(1.8rem, 4vw, 3rem)/1.05 var(--font-display); letter-spacing: -0.025em; }
+.pj__text { margin: 0; max-width: 52ch; font-size: 0.98rem; line-height: 1.6; color: var(--muted); }
+
+/* ---- filter tabs ---- */
+.pj__tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+.pj__tab {
+  padding: 10px 18px; border: 0; border-radius: 999px; cursor: pointer;
+  background: var(--soft); color: var(--ink); font: 700 0.72rem/1 var(--font-mono); letter-spacing: 0.06em;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.pj__tab:hover { transform: translateY(-2px); background: #e6e2ea; }
+.pj__tab.is-active { background: var(--blue); color: #fff; box-shadow: 0 5px 0 #162d94; transform: translateY(-2px); }
+
+/* ---- grid ---- */
+.pj__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+
+/* kartu muncul bertahap; jeda sampai grid masuk layar (kelas .is-in dari useReveal) */
+.pcard {
+  display: flex; flex-direction: column; overflow: hidden; border-radius: 18px; background: #fff;
+  box-shadow: 0 2px 0 #eceaf0, 0 10px 30px rgba(20, 20, 26, 0.07);
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.8s var(--ease), box-shadow 0.5s var(--ease);
+  animation: pcard-in 0.7s var(--ease) backwards; animation-delay: calc(var(--i) * 90ms); animation-play-state: paused;
+}
+.pj__grid.is-in .pcard { animation-play-state: running; }
+.pcard.is-hover { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-6px); transition: transform 0.12s linear, box-shadow 0.4s var(--ease); box-shadow: 0 2px 0 #eceaf0, 0 30px 60px rgba(20, 20, 26, 0.2); }
+.pcard:focus-visible { outline: 3px solid var(--cat); outline-offset: 4px; }
+
+.pcard__media { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #e9e7ee; }
+@property --r { syntax: '<length>'; inherits: true; initial-value: 0px; }
+.pcard__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pcard__img--base { filter: grayscale(0.8) contrast(1.05); transition: filter 0.6s var(--ease); }
+.pcard.is-hover .pcard__img--base { filter: grayscale(1) brightness(0.7); }
+
+/* lensa: foto berwarna penuh, hanya terlihat dalam lingkaran di sekitar kursor */
+.pcard__img--lens {
+  --r: 0px; transition: --r 0.6s var(--ease);
+  -webkit-mask-image: radial-gradient(circle var(--r) at var(--mx, 50%) var(--my, 50%), #000 97%, transparent 100%);
+          mask-image: radial-gradient(circle var(--r) at var(--mx, 50%) var(--my, 50%), #000 97%, transparent 100%);
+}
+.pcard.is-hover .pcard__img--lens { --r: 108px; }
+
+.pcard__ring, .pcard__cursor { position: absolute; z-index: 2; left: var(--mx, 50%); top: var(--my, 50%); pointer-events: none; border-radius: 50%; transform: translate(-50%, -50%) scale(0); transition: transform 0.5s var(--ease); }
+.pcard__ring { width: 216px; height: 216px; border: 2px solid rgba(255, 255, 255, 0.9); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15), inset 0 0 40px rgba(255, 255, 255, 0.15); }
+.pcard__cursor { display: grid; place-items: center; width: 62px; height: 62px; background: var(--cat); color: #fff; font: 700 0.62rem/1 var(--font-mono); letter-spacing: 0.08em; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); }
+.pcard.is-hover .pcard__ring, .pcard.is-hover .pcard__cursor { transform: translate(-50%, -50%) scale(1); }
+.pcard.is-hover .pcard__cursor { transition-delay: 0.08s; }
+
+/* layar sentuh: tanpa lensa, foto langsung berwarna */
+@media (hover: none) {
+  .pcard__img--lens, .pcard__ring, .pcard__cursor { display: none; }
+  .pcard__img--base { filter: none; }
+}
+.pcard__ph { position: absolute; inset: 0; display: grid; place-items: center; background: linear-gradient(180deg, #ecebf0, #b9b7c0); color: rgba(20, 20, 26, 0.25); }
+
+/* label kiri atas: warna ikut kategori, jadi yang sama otomatis seragam */
+.pcard__label {
+  position: absolute; top: 12px; left: 12px; padding: 6px 10px; border-radius: 6px;
+  background: var(--cat); color: #fff; font: 700 0.62rem/1 var(--font-mono); letter-spacing: 0.08em;
+  transition: transform 0.4s var(--ease);
+}
+.pcard:hover .pcard__label { transform: translateY(-2px) scale(1.05); }
+.pcard__note { position: absolute; top: 12px; right: 12px; padding: 6px 10px; border-radius: 6px; background: rgba(20, 20, 26, 0.6); backdrop-filter: blur(6px); color: #fff; font: 700 0.62rem/1 var(--font-mono); letter-spacing: 0.08em; }
+
+.pcard__body { display: flex; flex: 1; flex-direction: column; padding: 22px 24px 20px; }
+.pcard__title { margin: 0 0 12px; font: 600 clamp(1.25rem, 1.7vw, 1.55rem)/1.2 var(--font-body); letter-spacing: -0.02em; }
+.pcard__desc { margin: 0 0 18px; font-size: 0.88rem; line-height: 1.6; color: #4b4b57; }
+.pcard__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+.pcard__tags li { padding: 5px 9px; border-radius: 5px; background: var(--soft); font: 400 0.68rem/1 var(--font-mono); color: #4b4b57; transition: background 0.3s, transform 0.3s var(--ease); }
+.pcard:hover .pcard__tags li { background: #e8e4ee; }
+
+.pcard__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 4px; font: 700 0.7rem/1 var(--font-mono); letter-spacing: 0.06em; }
+.pcard__more { display: inline-flex; align-items: center; gap: 7px; }
+.pcard__more svg { transition: transform 0.4s var(--ease); }
+.pcard:hover .pcard__more svg { transform: translateX(5px); }
+.pcard:hover .pcard__more { color: var(--cat); }
+
+.pj__empty { grid-column: 1 / -1; margin: 0; padding: 48px 0; text-align: center; color: var(--muted); }
+.pj__empty code { font-family: var(--font-mono); }
+
+@keyframes pcard-in { from { opacity: 0; transform: translateY(28px) scale(0.97); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 1100px) { .pj__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pj__head { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .pj__grid { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .pcard, .pcard__img, .pcard__ring, .pcard__cursor, .pcard__more svg, .pj__tab { transition: none !important; animation: none !important; } }

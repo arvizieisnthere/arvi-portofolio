@@ -1,0 +1,82 @@
+/* ============================================================
+   SECTION 5 — LEADERSHIP (panel akordeon horizontal)
+   Panel yang disentuh kursor melebar, yang lain menyempit jadi strip vertikal.
+   ============================================================ */
+.ld { max-width: 1480px; margin: 0 auto; padding: clamp(40px, 6vw, 88px) clamp(20px, 4vw, 48px) clamp(72px, 9vw, 130px); }
+.ld__head { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 24px 56px; align-items: end; margin-bottom: clamp(28px, 3.5vw, 44px); }
+.ld__eyebrow { margin: 0 0 10px; font: 700 0.8rem/1 var(--font-mono); letter-spacing: 0.1em; color: #b8400f; }
+.ld__title { margin: 0; font: 800 clamp(1.8rem, 4vw, 3rem)/1.05 var(--font-display); letter-spacing: -0.025em; }
+.ld__text { margin: 0; max-width: 46ch; font-size: 1rem; line-height: 1.6; color: var(--muted); }
+
+.ld__row { display: flex; gap: 14px; height: clamp(480px, 42vw, 580px); }
+
+.lp {
+  position: relative; isolation: isolate; display: block; overflow: hidden; flex: 1 1 0; min-width: 0;
+  border-radius: 26px; color: #fff; background: #1c1c24;
+  box-shadow: 0 14px 40px rgba(20, 20, 26, 0.16);
+  transition: flex-grow 0.85s var(--ease), box-shadow 0.5s var(--ease);
+  animation: lp-rise 1s var(--ease) backwards; animation-delay: calc(var(--i) * 130ms); animation-play-state: paused;
+}
+.ld__row.is-in .lp { animation-play-state: running; }
+.lp.is-active { flex-grow: 3.3; box-shadow: 0 30px 70px rgba(20, 20, 26, 0.28); }
+.lp:focus-visible { outline: 3px solid var(--role); outline-offset: 4px; }
+
+/* foto: strip menyempit = redup & hitam putih, panel terbuka = berwarna & tenang */
+.lp__bg { position: absolute; inset: 0; z-index: -2; }
+.lp__bg img, .lp__ph { width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(1.18); filter: grayscale(0.85) brightness(0.7); transition: transform 1.3s var(--ease), filter 0.8s var(--ease); }
+.lp__ph { background: linear-gradient(150deg, hsl(var(--h) 45% 38%), hsl(calc(var(--h) + 40) 50% 18%)); }
+.lp.is-active .lp__bg img, .lp.is-active .lp__ph { transform: scale(1); filter: none; }
+.lp__shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(10, 10, 16, 0.92) 0%, rgba(10, 10, 16, 0.45) 55%, rgba(10, 10, 16, 0.1) 100%); }
+
+.lp__no { position: absolute; top: 22px; left: 24px; font: 700 0.85rem/1 var(--font-mono); letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.75); }
+
+/* judul vertikal di strip yang menyempit */
+.lp__vert {
+  position: absolute; left: 22px; bottom: 26px; writing-mode: vertical-rl; transform: rotate(180deg);
+  font: 600 clamp(1.3rem, 2vw, 1.8rem)/1 var(--font-body); letter-spacing: -0.01em; white-space: nowrap;
+  transition: opacity 0.35s var(--ease), transform 0.6s var(--ease);
+}
+.lp.is-active .lp__vert { opacity: 0; transform: rotate(180deg) translateY(-30px); pointer-events: none; }
+
+/* isi lengkap: lebarnya dikunci supaya teks tidak "mengalir" saat panel melebar */
+.lp__content { position: absolute; left: 0; bottom: 0; display: block; width: min(500px, 92vw); padding: 0 clamp(22px, 2.4vw, 34px) 28px; pointer-events: none; }
+.lp__content > * { opacity: 0; transform: translateY(22px); transition: opacity 0.35s var(--ease), transform 0.35s var(--ease); }
+.lp.is-active .lp__content { pointer-events: auto; }
+.lp.is-active .lp__content > * { opacity: 1; transform: none; transition: opacity 0.7s var(--ease), transform 0.8s var(--ease); }
+.lp.is-active .lp__content > :nth-child(1) { transition-delay: 0.25s; }
+.lp.is-active .lp__content > :nth-child(2) { transition-delay: 0.32s; }
+.lp.is-active .lp__content > :nth-child(3) { transition-delay: 0.4s; }
+.lp.is-active .lp__content > :nth-child(4) { transition-delay: 0.48s; }
+
+.lp__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.lp__role, .lp__tag { padding: 8px 12px; border-radius: 8px; font: 700 0.68rem/1 var(--font-mono); letter-spacing: 0.06em; }
+.lp__role { background: var(--role); }
+.lp__tag { background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(8px); color: rgba(255, 255, 255, 0.9); }
+.lp__name { margin: 0 0 12px; font: 600 clamp(1.7rem, 2.6vw, 2.3rem)/1.1 var(--font-body); letter-spacing: -0.025em; }
+.lp__desc { margin: 0 0 22px; font-size: 0.92rem; line-height: 1.6; color: rgba(255, 255, 255, 0.88); }
+.lp__foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.25); font: 700 0.7rem/1 var(--font-mono); letter-spacing: 0.06em; }
+.lp__type { color: var(--type); }
+.lp__more { display: inline-flex; gap: 8px; align-items: center; }
+.lp__more i { font-style: normal; display: inline-block; transition: transform 0.4s var(--ease); }
+.lp:hover .lp__more i { transform: translate(3px, -3px); }
+
+/* garis warna peran tumbuh di dasar panel yang terbuka */
+.lp__bar { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: var(--role); transform: scaleX(0); transform-origin: left; transition: transform 0.9s var(--ease); }
+.lp.is-active .lp__bar { transform: scaleX(1); transition-delay: 0.2s; }
+
+@keyframes lp-rise { from { opacity: 0; transform: translateY(50px); clip-path: inset(0 0 100% 0 round 26px); } to { opacity: 1; transform: none; clip-path: inset(0 0 0 0 round 26px); } }
+
+@media (max-width: 1100px) { .ld__head { grid-template-columns: 1fr; } }
+
+/* HP / tablet kecil: panel ditumpuk vertikal, yang terbuka melebar ke bawah */
+@media (max-width: 800px) {
+  .ld__row { flex-direction: column; height: auto; }
+  .lp { flex: none; height: 104px; transition: height 0.8s var(--ease), box-shadow 0.5s var(--ease); }
+  .lp.is-active { height: 520px; flex-grow: 0; }
+  .lp__vert { writing-mode: horizontal-tb; transform: none; left: 24px; bottom: 50%; margin-bottom: -0.55em; font-size: 1.35rem; }
+  .lp.is-active .lp__vert { transform: translateY(-20px); }
+  .lp__content { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp, .lp__bg img, .lp__ph, .lp__vert, .lp__content > *, .lp__bar { transition-duration: 0.01ms !important; transition-delay: 0s !important; animation: none !important; }
+}

@@ -1,0 +1,18 @@
+node_modules
+dist
+dist-ssr
+.env
+.env.*
+!.env.example
+*.db
+*.sqlite
+*.log
+*.mp4find . -name ".git" -not -path "*/node_modules/*"
+*.mov
+*.mkv
+*.avi
+*.zip
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
