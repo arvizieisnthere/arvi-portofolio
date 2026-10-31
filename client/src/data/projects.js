@@ -96,5 +96,10 @@ export const projects = [
     desc: 'Membangun identitas merek pribadi Arvizie, termasuk logo, palet warna, tipografi, dan elemen visual lainnya untuk menciptakan citra yang konsisten dan profesional.',
     tags: ['Design', 'Branding', 'Fashion'],
     type: 'BRAND', typeColor: '#282829', icon: 'spark', href: 'https://drive.google.com/drive/folders/1HkhCL5nMQynL_FdYgzKuTKdUAm_0dExv?usp=sharing' },
+  { id: 14, slug: 'pkm', category: 'video',
+    title: 'PKM dengan Dosen Universitas Mercu Buana',
+    desc: 'Membuat video dokumentasi kegiatan PKM bersama dosen Universitas Mercu Buana, termasuk proses pembuatan, wawancara, dan penyajian hasil akhir yang menarik.',
+    tags: ['Video Production', 'Editing', 'Creative Direction'],
+    type: 'VIDEO', typeColor: '#3b3bc3', icon: 'spark', href: 'https://arvizie.vercel.app' },
 
 ].map((p) => ({ ...p, image: imageFor(p.slug) }))
