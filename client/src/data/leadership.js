@@ -22,7 +22,7 @@ export const leadership = [
     slug: 'creatify', title: 'CREATIFY Community',
     role: 'ROLE: PRESIDENT', roleColor: '#f0622d', tag: 'Creative Fasilkom',
     desc: 'Wadah dalam mengembangkan minat mahasiswa dalam Visual dan Media Enthusiast, dan mengembangkan Inovasi Digital seperti Website/App/AI dan lainnya.',
-    type: 'KOMUNITAS KREATIF', typeColor: '#ff9a6b', href: '/leadership/creatify', hue: 18,
+    type: 'KOMUNITAS KREATIF', typeColor: '#ff9a6b', href: 'https://drive.google.com/drive/folders/1PJYaxHdIBelJQZs0OPI_O9jpYGxxYS15?usp=share_link', hue: 18,
   },
   {
     slug: 'oase', title: 'UKK OASE',
