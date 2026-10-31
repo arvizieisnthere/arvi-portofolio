@@ -1,5 +1,6 @@
 import './leadership.css'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { leadership, leadershipIntro } from '../data/leadership'
 import useReveal from '../hooks/useReveal'
 
@@ -22,9 +23,9 @@ export default function Leadership() {
 
       <div ref={rowRef} className="ld__row">
         {leadership.map((it, i) => (
-          <a
+          <Link
             key={it.slug}
-            href={it.href}
+            to={it.href}
             className={`lp ${active === i ? 'is-active' : ''}`}
             style={{ '--i': i, '--role': it.roleColor, '--type': it.typeColor, '--h': it.hue }}
             aria-label={`${it.title}, ${it.role.replace('ROLE: ', '')}. Buka detail jejak.`}
@@ -57,7 +58,7 @@ export default function Leadership() {
             </span>
 
             <span className="lp__bar" aria-hidden="true" />
-          </a>
+          </Link>
         ))}
       </div>
     </section>
