@@ -85,7 +85,7 @@ export const details = {
     tagline: ['Suara mahasiswa,', 'teknologinya kita.'],
     intro:
       'Di Departemen Riset & Teknologi, tugasnya bukan cuma bikin laporan. Kita ngulik data, bikin website profil kabinet, dan ngebangun jalur aspirasi supaya suara mahasiswa nggak berhenti di grup chat.',
-    keywords: ['RISET', 'TEKNOLOGI', 'ASPIRASI', 'ADVOKASI', 'WEBSITE', 'KAJIAN'],
+    keywords: ['RISET', 'TEKNOLOGI', 'ASPIRASI', 'PENGABDIAN', 'WEBSITE', 'KAJIAN'],
     stats: [
       { n: 18, s: '', l: 'riset & kajian' },
       { n: 1, s: '', l: 'website profil kabinet' },
@@ -93,15 +93,15 @@ export const details = {
       { n: 12, s: '', l: 'bulan masa kabinet' },
     ],
     chapters: [
-      { no: '01', when: 'Awal kabinet', title: 'Kenalan sama masalahnya dulu', text: 'Sebelum bikin apa-apa, kita kumpulin keluhan dan kebutuhan mahasiswa. Ternyata banyak yang butuh hal sepele: info yang jelas dan tempat nyampein pendapat.', cap: 'rapat kerja, banyak catatan' },
-      { no: '02', when: 'Tengah kabinet', title: 'Bangun website, sambil belajar', text: 'Website profil BEM kita kerjain dari desain sampai kode. Banyak revisi, banyak begadang, tapi hasilnya bisa dipakai semua orang.', cap: 'debugging bareng, jam malam' },
-      { no: '03', when: 'Akhir kabinet', title: 'Aspirasi yang akhirnya terdengar', text: 'Jalur aspirasi terintegrasi mulai rame. Yang tadinya cuma ngeluh di belakang, sekarang bisa nyampein langsung dan dapat tanggapan.', cap: 'serah terima, lega' },
+      { no: '01', when: 'Awal kabinet', title: 'Mulai Riset hingga Final', text: 'Sebelum bikin apa-apa, kita kumpulin keluhan dan kebutuhan mahasiswa. Ternyata banyak yang butuh hal sepele: info yang jelas dan tempat nyampein pendapat.', cap: 'kita punya website bos' },
+      { no: '02', when: 'Tengah kabinet', title: 'Dari Mahasiswa untuk Masyarakat', text: 'Mengikuti Pengabdian Masyarakat yang ada di Desa Bagoang, Kab. Bogor untuk mengajar siswa SMK disana dan membantu Masyarakat dalam sosialisai di Era Digital. Mulai dari Kegunaan hingga Kejahatan.', cap: 'Divisi Pembelajaran' },
+      { no: '03', when: 'Akhir kabinet', title: 'Lomba Terbuka untuk Mahasiswa', text: 'Menjadi Kepala Divisi Acara dalam program IGNITE FEST 2026, lomba yang terdiri 2 hari, MLBB dan Innovation Digital. Mulai dari mengarahkan, membuat konsep acara, hingga menjadi pembuatan poin penilaian juri.', cap: 'Ini hebat banget aku' },
     ],
     highlights: [
-      { tag: 'RISET', title: 'Kajian kebutuhan mahasiswa', text: 'Survei, olah data, jadi bahan keputusan. Angka yang bisa dipertanggungjawabkan.' },
-      { tag: 'WEBSITE', title: 'Profil kabinet online', text: 'Struktur, program kerja, dan semua info dalam satu tempat yang rapi.' },
-      { tag: 'ADVOKASI', title: 'Ruang aspirasi', text: 'Satu formulir, satu jalur, tanpa ribet. Semua masukan tercatat.' },
-      { tag: 'BELAJAR', title: 'Sharing teknologi', text: 'Sesi santai buat bahas tools yang berguna buat kuliah dan karier.' },
+      { tag: 'RISET', title: 'Kajian dan Profil', text: 'Riset kebutuhan mahasiswa hingga profil kabinet struktur, proker, dan semua info dalam satu tempat.' },
+      { tag: 'PENGMAS', title: 'Desa Aware Digital', text: 'Struktur, program kerja, dan semua info dalam satu tempat yang rapi.' },
+      { tag: 'IGNITEFEST', title: 'Tempat Berkembang', text: 'Lomba yang memberikan platform bagi mahasiswa untuk berkembang.' },
+      { tag: 'OASE X BEM', title: 'Orang-orang keren dari OASE', text: 'Hidup dari OASE, berkembang untuk BEM Fasilkom.' },
     ],
     lessons: [
       { a: 'Data bikin suara kita', hl: 'susah diabaikan', b: '.' },
