@@ -1,7 +1,7 @@
 import heroImg from '../assets/hero.jpg'
+import avatarImg from '../assets/avatar.png'
 // Kalau punya foto profil kecil untuk navbar, taruh di src/assets/avatar.png
 // lalu ganti: import avatarImg from '../assets/avatar.png'
-const avatarImg = heroImg
 
 export const profile = {
   brand: 'ARVI',
