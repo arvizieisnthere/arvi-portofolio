@@ -8,6 +8,7 @@ import Projects from './components/Projects'
 import Gallery from './components/Gallery'
 import Leadership from './components/Leadership'
 import Skills from './components/Skills'
+import Certificates from './components/Certificates'
 import Finale from './components/Finale'
 import Footer from './components/Footer'
 import LeadershipDetail from './components/LeadershipDetail'
@@ -36,8 +37,9 @@ function Home() {
         <Projects />
         <Gallery />
         <Leadership />
+        <Certificates />
         <Skills />
-        <Finale />
+        <Finale />  
       </main>
       <Footer />
     </div>
