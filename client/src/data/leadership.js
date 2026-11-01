@@ -20,15 +20,15 @@ export const leadershipIntro = {
 export const leadership = [
   {
     slug: 'creatify', title: 'CREATIFY Community',
-    role: 'ROLE: PRESIDENT', roleColor: '#f0622d', tag: 'Creative Fasilkom',
+    role: 'ROLE: PRESIDENT', roleColor: '#34c6ff', tag: 'Creative Fasilkom',
     desc: 'Wadah dalam mengembangkan minat mahasiswa dalam Visual dan Media Enthusiast, dan mengembangkan Inovasi Digital seperti Website/App/AI dan lainnya.',
     type: 'KOMUNITAS KREATIF', typeColor: '#ff9a6b', href: '/leadership/creatify', hue: 18,
   },
   {
     slug: 'oase', title: 'UKK OASE',
-    role: 'ROLE: KEPALA DEPARTEMEN SOSIAL', roleColor: '#2447d9', tag: 'Kemanusiaan',
+    role: 'ROLE: KEPALA DEPARTEMEN SOSIAL', roleColor: '#00A0A7', tag: 'Kemanusiaan',
     desc: 'Organisasi Mahasiswa Sosial Peduli Lingkungan, bergerak untuk menjadi jembatan masyarakat dalam bentuk kemanusiaan.',
-    type: 'UNIT KEGIATAN KHUSUS', typeColor: '#a9b8ff', href: '/leadership/oase', hue: 225,
+    type: 'UNIT KEGIATAN KHUSUS', typeColor: '#3974ff', href: '/leadership/oase', hue: 225,
   },
   {
     slug: 'bem-fasilkom', title: 'BEM Fasilkom',
