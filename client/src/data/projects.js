@@ -100,6 +100,6 @@ export const projects = [
     title: 'PKM dengan Dosen Universitas Mercu Buana',
     desc: 'Membuat video dokumentasi kegiatan PKM bersama dosen Universitas Mercu Buana, termasuk proses pembuatan, wawancara, dan penyajian hasil akhir yang menarik.',
     tags: ['Video Production', 'Editing', 'Creative Direction'],
-    type: 'VIDEO', typeColor: '#3b3bc3', icon: 'spark', href: 'https://arvizie.vercel.app' },
+    type: 'VIDEO', typeColor: '#3b3bc3', icon: 'spark', href: 'https://youtu.be/ymAMAl5kmpA?si=WB2v0tzjMz2oJdZe' },
 
 ].map((p) => ({ ...p, image: imageFor(p.slug) }))
