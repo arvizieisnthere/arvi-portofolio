@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist+Mono:wght@300..700&display=swap');
+
+/* ---------- selama opening: situs di belakang menunggu ---------- */
+html.is-locked { overflow: hidden; }
+html.is-loading #root *, html.is-loading #root *::before, html.is-loading #root *::after { animation-play-state: paused !important; }
+
+/* ============================================================
+   OPENING — palet #000 · #6D001A · #fff
+   ============================================================ */
+.boot {
+  --wine: #6D001A; --pad: clamp(20px, 3.2vw, 44px);
+  --f-title: 'Archivo', 'Arial Narrow', Impact, sans-serif; --f-mono: 'Geist Mono', ui-monospace, Menlo, monospace;
+  position: fixed; inset: 0; z-index: 10000; overflow: hidden; color: #fff; font-family: var(--f-mono);
+  --p: 0;
+}
+.boot *, .boot *::before, .boot *::after { box-sizing: border-box; }
+.boot__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* dua daun rana */
+.boot__p { position: absolute; left: 0; right: 0; height: 50.2%; background: #000; transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1); }
+.boot__p--t { top: 0; }
+.boot__p--b { bottom: 0; }
+.boot[data-s='open'] .boot__p--t { transform: translateY(-101%); }
+.boot[data-s='open'] .boot__p--b { transform: translateY(101%); }
+
+.boot__c { position: absolute; inset: 0; transition: opacity 0.22s ease, transform 0.5s var(--ease, ease); }
+.boot[data-s='flash'] .boot__c, .boot[data-s='open'] .boot__c { opacity: 0; transform: scale(1.04); }
+
+/* bulan burgundy terbit sesuai progres */
+.boot__disc { position: absolute; left: 50%; bottom: 0; width: min(92vmin, 840px); aspect-ratio: 1; margin-left: calc(min(92vmin, 840px) / -2); border-radius: 50%; background: var(--wine); box-shadow: 0 0 140px rgba(109, 0, 26, 0.65); transform: translateY(calc(100% - var(--p) * 64%)); will-change: transform; }
+
+/* sudut bingkai tergambar */
+.boot__k { position: absolute; width: 24px; height: 24px; border: 0 solid #fff; animation: boot-k 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+.boot__k--a { top: var(--pad); left: var(--pad); border-top-width: 1px; border-left-width: 1px; transform-origin: top left; }
+.boot__k--b { top: var(--pad); right: var(--pad); border-top-width: 1px; border-right-width: 1px; transform-origin: top right; animation-delay: 0.06s; }
+.boot__k--c { bottom: var(--pad); left: var(--pad); border-bottom-width: 1px; border-left-width: 1px; transform-origin: bottom left; animation-delay: 0.12s; }
+.boot__k--d { bottom: var(--pad); right: var(--pad); border-bottom-width: 1px; border-right-width: 1px; transform-origin: bottom right; animation-delay: 0.18s; }
+
+.boot__t { position: absolute; margin: 0; font-size: 0.72rem; line-height: 1; letter-spacing: 0.16em; text-transform: uppercase; font-variant-numeric: tabular-nums; animation: boot-fade 0.6s ease 0.25s backwards; }
+.boot__t--l { top: calc(var(--pad) + 22px); left: calc(var(--pad) + 4px); display: flex; align-items: center; gap: 10px; }
+.boot__t--r { top: calc(var(--pad) + 22px); right: calc(var(--pad) + 4px); color: rgba(255, 255, 255, 0.8); }
+.boot__t--br { bottom: calc(var(--pad) + 22px); right: calc(var(--pad) + 4px); color: rgba(255, 255, 255, 0.8); }
+.boot__rec { width: 9px; height: 9px; border-radius: 50%; background: #fff; animation: boot-blink 1s steps(1) infinite; }
+
+/* kata ARVI: garis tepi, terisi putih dari bawah */
+.boot__word { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -54%); animation: boot-fade 0.7s ease 0.2s backwards; }
+.boot__w0, .boot__w1 { display: flex; align-items: flex-end; font: 900 clamp(7.5rem, 31vw, 29rem)/0.8 var(--f-title); font-stretch: 62%; font-variation-settings: 'wdth' 62; letter-spacing: -0.015em; text-transform: uppercase; white-space: nowrap; }
+.boot__w0 { color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.9); }
+.boot__w1 { position: absolute; left: 0; top: 0; color: #fff; clip-path: inset(calc(100% - var(--p) * 100%) 0 0 0); }
+.boot__w0 b, .boot__w1 b { display: inline-block; width: 0.1em; height: 0.1em; margin-left: 0.03em; background: #fff; }
+.boot__w0 b { background: transparent; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.9); }
+
+/* kotak autofokus: berburu lalu mengunci */
+.boot__af { position: absolute; left: 50%; top: 50%; width: min(86vw, 1240px); height: min(50vw, 560px); transform: translate(-50%, -54%) scale(1.14); opacity: 0.55; transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease; animation: boot-hunt 1.2s steps(1) infinite; }
+.boot__af i { position: absolute; width: 28px; height: 28px; border: 0 solid #fff; }
+.boot__af i:nth-child(1) { top: 0; left: 0; border-top-width: 1.5px; border-left-width: 1.5px; }
+.boot__af i:nth-child(2) { top: 0; right: 0; border-top-width: 1.5px; border-right-width: 1.5px; }
+.boot__af i:nth-child(3) { bottom: 0; left: 0; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+.boot__af i:nth-child(4) { bottom: 0; right: 0; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+.boot__af span { position: absolute; left: 0; bottom: calc(100% + 10px); font-size: 0.66rem; letter-spacing: 0.16em; }
+.boot__af em { font-style: normal; }
+.boot__af em:last-child { display: none; }
+.boot[data-s='lock'] .boot__af, .boot[data-s='flash'] .boot__af { transform: translate(-50%, -54%) scale(1); opacity: 1; animation: none; }
+.boot[data-s='lock'] .boot__af em:first-child, .boot[data-s='flash'] .boot__af em:first-child { display: none; }
+.boot[data-s='lock'] .boot__af em:last-child, .boot[data-s='flash'] .boot__af em:last-child { display: inline; }
+
+/* penghitung besar */
+.boot__n { position: absolute; left: calc(var(--pad) + 2px); bottom: calc(var(--pad) + 16px); margin: 0; display: flex; align-items: baseline; gap: 4px; font: 900 clamp(2.6rem, 6.4vw, 6.4rem)/0.9 var(--f-title); font-stretch: 62%; font-variation-settings: 'wdth' 62; font-variant-numeric: tabular-nums; animation: boot-fade 0.6s ease 0.3s backwards; }
+.boot__n small { font: 400 0.8rem/1 var(--f-mono); letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7); }
+
+/* celah rana & lampu kilat */
+.boot__slit { position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: #fff; opacity: 0; transform: scaleX(0); }
+.boot[data-s='flash'] .boot__slit { opacity: 1; transform: scaleX(1); transition: transform 0.2s ease; }
+.boot[data-s='open'] .boot__slit { opacity: 0; transform: scaleX(1); transition: opacity 0.5s ease 0.15s; }
+.boot__flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+.boot[data-s='flash'] .boot__flash, .boot[data-s='open'] .boot__flash { animation: boot-flash 0.5s ease-out forwards; }
+
+@keyframes boot-k { from { transform: scale(0); opacity: 0; } }
+@keyframes boot-fade { from { opacity: 0; } }
+@keyframes boot-blink { 50% { opacity: 0; } }
+@keyframes boot-hunt { 0% { transform: translate(-50%, -54%) scale(1.14); } 34% { transform: translate(calc(-50% + 6px), calc(-54% - 4px)) scale(1.09); } 67% { transform: translate(calc(-50% - 5px), calc(-54% + 3px)) scale(1.16); } }
+@keyframes boot-flash { 0% { opacity: 0; } 22% { opacity: 1; } 100% { opacity: 0; } }
+
+@media (max-width: 700px) {
+  .boot__af { height: min(70vw, 420px); }
+  .boot__t--r { display: none; }
+}
+
+/* reduce motion: tanpa rana & kilat — cukup memudar */
+@media (prefers-reduced-motion: reduce) {
+  .boot *, .boot *::before, .boot *::after { animation: none !important; }
+  .boot__p { transition: opacity 0.3s ease; }
+  .boot[data-s='open'] .boot__p--t, .boot[data-s='open'] .boot__p--b { transform: none; opacity: 0; }
+  .boot__flash, .boot__slit { display: none; }
+  .boot__disc { transition: none; }
+}

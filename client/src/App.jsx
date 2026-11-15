@@ -14,6 +14,7 @@ import Footer from './components/Footer'
 import LeadershipDetail from './components/LeadershipDetail'
 import DevPage from './components/DevPage'
 import UiuxPage from './components/UiuxPage'
+import Loader from './components/Loader'
 
 // Pindah halaman → mulai dari atas. Kalau ada #hash (mis. /#leadership) → scroll ke bagian itu.
 function ScrollManager() {
@@ -42,6 +43,7 @@ function Home() {
         <Certificates />
         <Skills />
         <Finale />  
+        <Loader />
       </main>
       <Footer />
     </div>
