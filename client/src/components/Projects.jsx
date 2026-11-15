@@ -1,140 +1,170 @@
 import './projects.css'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { projects, projectsIntro, categories } from '../data/projects'
 import useReveal from '../hooks/useReveal'
 
-const svg = { viewBox: '0 0 24 24', width: 14, height: 14, fill: 'none', stroke: 'currentColor', strokeWidth: 2.2, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }
-const ICONS = {
-  arrow: <svg {...svg}><path d="M5 12h14M13 6l6 6-6 6" /></svg>,
-  chevron: <svg {...svg}><path d="m9 6 6 6-6 6" /></svg>,
-  circle: <svg {...svg}><circle cx="12" cy="12" r="9" /><path d="m10 8 5 4-5 4z" /></svg>,
-  upright: <svg {...svg}><path d="M7 17 17 7M8 7h9v9" /></svg>,
-  doc: <svg {...svg}><path d="M7 3h7l4 4v14H7zM14 3v4h4M10 13h5M10 17h5" /></svg>,
-  spark: <svg {...svg}><path d="M12 3v5M12 16v5M3 12h5M16 12h5M6 6l3 3M15 15l3 3M18 6l-3 3M9 15l-3 3" /></svg>,
-}
+const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+const clamp01 = (x) => Math.min(1, Math.max(0, x))
+const pad = (n) => String(n).padStart(2, '0')
 
-const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-function ProjectCard({ p, cat, i }) {
-  const card = useRef(null)
-  const media = useRef(null)
-  const raf = useRef(0)
-
-  // Kartu miring mengikuti kursor + lensa berwarna di area foto
-  const track = (e) => {
-    if (e.pointerType !== 'mouse' || reduceMotion()) return
-    const { clientX, clientY } = e
-    cancelAnimationFrame(raf.current)
-    raf.current = requestAnimationFrame(() => {
-      const el = card.current
-      const c = el.getBoundingClientRect()
-      const m = media.current.getBoundingClientRect()
-      const px = (clientX - c.left) / c.width
-      const py = (clientY - c.top) / c.height
-      el.style.setProperty('--ry', `${(px - 0.5) * 9}deg`)
-      el.style.setProperty('--rx', `${-(py - 0.5) * 7}deg`)
-      el.style.setProperty('--mx', `${Math.min(Math.max(clientX - m.left, 0), m.width)}px`)
-      el.style.setProperty('--my', `${Math.min(Math.max(clientY - m.top, 0), m.height)}px`)
-    })
-  }
-  const enter = (e) => {
-    if (e.pointerType !== 'mouse' || reduceMotion()) return
-    card.current.classList.add('is-hover')
-    track(e)
-  }
-  const leave = () => {
-    cancelAnimationFrame(raf.current)
-    const el = card.current
-    el.classList.remove('is-hover')
-    el.style.setProperty('--rx', '0deg')
-    el.style.setProperty('--ry', '0deg')
-  }
-
-  return (
-    <a
-      ref={card}
-      href={p.href}
-      className="pcard"
-      style={{ '--i': i, '--cat': cat.color }}
-      onPointerEnter={enter}
-      onPointerMove={track}
-      onPointerLeave={leave}
-    >
-      <div className="pcard__media" ref={media}>
-        {p.image ? (
-          <>
-            <img className="pcard__img pcard__img--base" src={p.image} alt={`Tampilan proyek ${p.title}`} loading="lazy" />
-            <img className="pcard__img pcard__img--lens" src={p.image} alt="" aria-hidden="true" loading="lazy" />
-          </>
-        ) : (
-          <div className="pcard__ph" aria-hidden="true">
-            <svg viewBox="0 0 200 160" width="40%" fill="currentColor"><circle cx="140" cy="38" r="20" /><path d="M20 150 80 55l30 38 22-24 48 81z" /></svg>
-          </div>
-        )}
-        <span className="pcard__ring" aria-hidden="true" />
-        <span className="pcard__cursor" aria-hidden="true">LIHAT</span>
-        <span className="pcard__label">{cat.label}</span>
-        {p.note && <span className="pcard__note">{p.note}</span>}
-      </div>
-
-      <div className="pcard__body">
-        <h3 className="pcard__title">{p.title}</h3>
-        <p className="pcard__desc">{p.desc}</p>
-        <ul className="pcard__tags">
-          {p.tags.map((t) => <li key={t}>{t}</li>)}
-        </ul>
-        <div className="pcard__foot">
-          <span className="pcard__type" style={{ color: p.typeColor }}>{p.type}</span>
-          <span className="pcard__more">DETAIL PROYEK {ICONS[p.icon]}</span>
-        </div>
-      </div>
-    </a>
-  )
-}
-
+/* =============================================================
+   KATALOG = ROLL FILM. Scroll menggeser gulungan film ke samping
+   (section menempel di layar), tiap proyek satu frame.
+   Data: data/projects.js — tidak ada yang perlu diubah di sana.
+   ============================================================= */
 export default function Projects() {
   const [active, setActive] = useState('all')
-  const headRef = useReveal(0.3)
-  const gridRef = useReveal(0.1)
+  const [frame, setFrame] = useState(0)
+  const [pinned, setPinned] = useState(() => window.matchMedia('(min-width: 901px)').matches)
 
-  const catById = Object.fromEntries(categories.map((c) => [c.id, c]))
-  const visible = active === 'all' ? projects : projects.filter((p) => p.category === active)
-  const tabs = [{ id: 'all', label: `SEMUA (${projects.length})` }, ...categories]
+  const sec = useRef(null)
+  const vp = useRef(null)
+  const strip = useRef(null)
+  const headRef = useReveal(0.25)
+
+  const catLabel = Object.fromEntries(categories.map((c) => [c.id, c.label]))
+  const shown = active === 'all' ? projects : projects.filter((p) => p.category === active)
+  const total = shown.length
+  const count = (id) => (id === 'all' ? projects.length : projects.filter((p) => p.category === id).length)
+
+  // judul: semua kata kecuali yang terakhir = kondensed; kata terakhir = serif miring
+  const words = projectsIntro.title.split(' ')
+  const lead = words.slice(0, -1).join(' ')
+  const serif = `${words[words.length - 1].toLowerCase()}.`
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 901px)')
+    const f = () => setPinned(mq.matches)
+    mq.addEventListener('change', f)
+    return () => mq.removeEventListener('change', f)
+  }, [])
+
+  // desktop: scroll vertikal → gulungan film bergeser horizontal
+  useEffect(() => {
+    const s = sec.current, st = strip.current, v = vp.current
+    if (!pinned) { if (s) s.style.height = ''; if (st) st.style.transform = ''; return }
+    const calm = reduced()
+    let max = 0, target = 0, cur = 0, raf = 0, near = true, last = -1
+
+    const calc = () => {
+      const r = s.getBoundingClientRect()
+      target = clamp01(-r.top / Math.max(1, r.height - window.innerHeight))
+    }
+    const measure = () => {
+      max = Math.max(0, st.scrollWidth - v.clientWidth)
+      s.style.height = `${window.innerHeight + max}px`   // makin banyak frame, makin panjang scroll-nya
+      calc()
+    }
+    const tick = () => {
+      raf = requestAnimationFrame(tick)
+      if (!near) return
+      cur += (target - cur) * (calm ? 1 : 0.12)
+      if (Math.abs(target - cur) < 0.0004) cur = target
+      st.style.transform = `translate3d(${(-cur * max).toFixed(1)}px,0,0)`
+      s.style.setProperty('--p', cur.toFixed(4))
+      const li = st.querySelector('li')
+      if (li) {
+        const idx = Math.min(total - 1, Math.max(0, Math.floor((cur * max + v.clientWidth / 2) / li.offsetWidth)))
+        if (idx !== last) { last = idx; setFrame(idx) }
+      }
+    }
+
+    const ro = new ResizeObserver(measure); ro.observe(st); ro.observe(v)
+    const io = new IntersectionObserver(([e]) => { near = e.isIntersecting }, { rootMargin: '400px 0px' }); io.observe(s)
+    window.addEventListener('scroll', calc, { passive: true })
+    window.addEventListener('resize', measure)
+    measure(); raf = requestAnimationFrame(tick)
+    return () => {
+      cancelAnimationFrame(raf); ro.disconnect(); io.disconnect()
+      window.removeEventListener('scroll', calc); window.removeEventListener('resize', measure)
+    }
+  }, [pinned, total, active])
+
+  const pick = (id) => {
+    setActive(id)
+    setFrame(0)
+    // kembali ke awal gulungan supaya frame pertama langsung terlihat
+    if (pinned && sec.current) {
+      const r = sec.current.getBoundingClientRect()
+      if (r.top < 0) window.scrollTo({ top: window.scrollY + r.top, behavior: reduced() ? 'auto' : 'smooth' })
+    }
+  }
+
+  const tabs = [{ id: 'all', label: 'SEMUA' }, ...categories]
 
   return (
-    <section id="projects" className="pj">
-      <header ref={headRef} className="pj__head reveal-group reveal-group--scroll">
-        <div className="reveal-child" style={{ '--i': 0 }}>
-          <p className="pj__eyebrow">{projectsIntro.eyebrow}</p>
-          <h2 className="pj__title">{projectsIntro.title}</h2>
+    <section id="projects" ref={sec} className="pj" data-pinned={pinned}>
+      <div className="pj-pin">
+        <div className="pj-grain" aria-hidden="true" />
+
+        <header ref={headRef} className="pj-head">
+          <div className="pj-head__l">
+            <p className="pj-eyebrow">{projectsIntro.eyebrow}</p>
+            <h2 className="pj-title" aria-label={projectsIntro.title}>
+              <span className="pj-t1" aria-hidden="true"><span>{lead}</span></span>
+              <span className="pj-t2" aria-hidden="true"><span>{serif}</span></span>
+            </h2>
+          </div>
+          <div className="pj-head__r">
+            <p className="pj-lead">{projectsIntro.text}</p>
+            <p className="pj-count" aria-live="polite">
+              <span className="pj-count__n"><b key={`${active}-${frame}`}>{pad(total ? frame + 1 : 0)}</b></span>
+              <i>/</i><span>{pad(total)}</span><em>FRAME</em>
+            </p>
+          </div>
+        </header>
+
+        <div className="pj-fl" role="group" aria-label="Filter kategori proyek">
+          {tabs.map((t) => (
+            <button key={t.id} type="button" className={active === t.id ? 'is-on' : ''} aria-pressed={active === t.id} onClick={() => pick(t.id)}>
+              {t.label} <i>({pad(count(t.id))})</i>
+            </button>
+          ))}
         </div>
-        <p className="pj__text reveal-child" style={{ '--i': 1 }}>{projectsIntro.text}</p>
-      </header>
 
-      <div className="pj__tabs" role="group" aria-label="Filter kategori proyek">
-        {tabs.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            className={`pj__tab ${active === t.id ? 'is-active' : ''}`}
-            aria-pressed={active === t.id}
-            onClick={() => setActive(t.id)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
+        {/* gulungan film */}
+        <div ref={vp} className="pj-vp">
+          <ul ref={strip} className="pj-strip" key={active}>
+            {shown.map((p, i) => (
+              <li key={p.id} className="pj-fr" style={{ '--i': Math.min(i, 8) }}>
+                <a href={p.href} className="pj-a" aria-label={`${p.title} — lihat detail proyek`}>
+                  <span className="pj-edge" aria-hidden="true">
+                    <span>▶ {pad(i + 1)}</span><span>ARVI 400</span><span>{pad(i + 1)}A</span>
+                  </span>
 
-      <div ref={gridRef} className="pj__grid" aria-live="polite">
-        {visible.map((p, i) => (
-          <ProjectCard key={`${active}-${p.id}`} p={p} cat={catById[p.category]} i={i} />
-        ))}
+                  <span className="pj-img">
+                    {p.image
+                      ? <img src={p.image} alt={`Tampilan proyek ${p.title}`} loading="lazy" draggable="false" />
+                      : <b className="pj-ph" aria-hidden="true">{pad(i + 1)}</b>}
+                    {p.note && <span className="pj-note">{p.note}</span>}
 
-        {visible.length === 0 && (
-          <p className="pj__empty">
-            Belum ada proyek di kategori ini. Tambahkan di <code>src/data/projects.js</code>.
-          </p>
-        )}
+                    <span className="pj-over">
+                      <span className="pj-over__d">{p.desc}</span>
+                      <span className="pj-over__t">{(p.tags || []).join(' / ')}</span>
+                      <span className="pj-over__c">BUKA PROYEK <i aria-hidden="true">↗</i></span>
+                    </span>
+                  </span>
+
+                  <span className="pj-cap">
+                    <span className="pj-cap__t">{p.title}</span>
+                    <span className="pj-cap__c">{catLabel[p.category] || p.type}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+
+            {total === 0 && (
+              <li className="pj-empty">
+                <p>Belum ada proyek di kategori ini.<br />Tambahkan di <code>src/data/projects.js</code>.</p>
+              </li>
+            )}
+          </ul>
+        </div>
+
+        <div className="pj-foot" aria-hidden="true">
+          <span className="pj-foot__h">SCROLL — GESER GULUNGANNYA</span>
+          <span className="pj-bar"><i /></span>
+        </div>
       </div>
     </section>
   )

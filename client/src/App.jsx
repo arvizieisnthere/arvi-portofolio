@@ -12,6 +12,8 @@ import Certificates from './components/Certificates'
 import Finale from './components/Finale'
 import Footer from './components/Footer'
 import LeadershipDetail from './components/LeadershipDetail'
+import DevPage from './components/DevPage'
+import UiuxPage from './components/UiuxPage'
 
 // Pindah halaman → mulai dari atas. Kalau ada #hash (mis. /#leadership) → scroll ke bagian itu.
 function ScrollManager() {
@@ -54,6 +56,8 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/leadership/:slug" element={<LeadershipDetail />} />
         <Route path="*" element={<Home />} />
+        <Route path="/interests/development" element={<DevPage />} />
+        <Route path="/interests/uiux" element={<UiuxPage />} />
       </Routes>
     </>
   )

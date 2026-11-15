@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap');
+
+/* PITA KATA — satu-satunya blok putih besar di halaman: hitam di atas putih, titik pemisah burgundy */
+.mq { position: relative; overflow: hidden; background: #fff; color: #000; }
+.mq-track { display: flex; width: max-content; will-change: transform; }
+.mq-seq { display: flex; flex: none; margin: 0; padding: 0; list-style: none; }
+.mq-seq li { display: flex; align-items: center; gap: clamp(1.4rem, 3vw, 3rem); padding: clamp(0.9rem, 1.6vw, 1.5rem) 0 clamp(0.9rem, 1.6vw, 1.5rem) clamp(1.4rem, 3vw, 3rem); white-space: nowrap; font: 900 clamp(2rem, 5vw, 4.8rem)/1 'Archivo', 'Arial Narrow', Impact, sans-serif; font-stretch: 62%; font-variation-settings: 'wdth' 62; text-transform: uppercase; letter-spacing: -0.01em; }
+.mq-seq li.is-out span { color: transparent; -webkit-text-stroke: 1.5px #000; }
+.mq-seq i { display: block; width: 0.3em; height: 0.3em; background: #6D001A; }
+
+@media (prefers-reduced-motion: reduce) { .mq-track { flex-wrap: wrap; width: auto; justify-content: center; } .mq-seq:nth-child(2) { display: none; } }

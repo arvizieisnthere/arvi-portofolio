@@ -15,6 +15,8 @@ const imageFor = (slug) => {
 export const interestsIntro = {
   eyebrow: '// EKSPLORASI & PASSION',
   title: 'APA YANG SAYA SUKA KERJAKAN?',
+  lead: 'APA YANG SAYA',          // baris 1 (kondensed tebal)
+  serif: 'suka kerjakan?',         // baris 2 (serif miring)
   text:
     'Kombinasi eksplorasi visual emosional dan logika komputasi untuk menciptakan produk yang berdaya guna dan memikat hati.',
 }

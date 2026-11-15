@@ -1,102 +1,115 @@
 import './gallery.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gallery, galleryIntro } from '../data/gallery'
 import useReveal from '../hooks/useReveal'
 
-const FLIP_MS = 850 // samakan dengan durasi transform .gcard__flip di gallery.css
+const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v))
+const pad = (n) => String(n).padStart(2, '0')
 
-function Face({ photo, alt }) {
-  return photo.src ? (
-    <img src={photo.src} alt={alt} draggable="false" />
-  ) : (
-    <div className="gcard__ph" style={{ '--h': photo.hue }} aria-hidden="true"><span>{photo.label}</span></div>
-  )
-}
+/* satu lapisan foto (atau penanda kosong kalau fotonya belum ada) */
+const pic = (photo, cls, alt, key) =>
+  photo.src
+    ? <img key={key} className={cls} src={photo.src} alt={alt} draggable="false" />
+    : <div key={key} className={`${cls} gl-ph`} role="img" aria-label={alt || photo.label}><span>{photo.label}</span></div>
 
-function GalleryCard({ item, i }) {
+/* =============================================================
+   SATU CETAKAN. Klik = "jepret": layar berkedip putih seperti lampu kilat,
+   lalu foto berikutnya masuk menyapu dari kanan. Setelah foto terakhir,
+   film "digulung balik" ke foto pertama (menyapu dari kiri).
+   ============================================================= */
+function Tile({ item, i }) {
   const N = item.photos.length
-  const [flips, setFlips] = useState(0)   // total flip → menentukan sudut putar
-  const [front, setFront] = useState(0)   // indeks foto di sisi depan
-  const [back, setBack] = useState(1 % N) // indeks foto di sisi belakang
-  const [busy, setBusy] = useState(false)
+  const [idx, setIdx] = useState(0)
+  const [prev, setPrev] = useState(-1)
+  const [snap, setSnap] = useState(0)
+  const [rew, setRew] = useState(false)
 
-  // sisi yang sedang menghadap pengguna
-  const current = flips % 2 === 0 ? front : back
+  // muat semua foto kartu ini lebih awal supaya jepretan tidak tersendat
+  useEffect(() => { item.photos.forEach((p) => { if (p.src) new Image().src = p.src }) }, [item])
 
-  // preload semua foto kartu ini supaya tidak ada kedip saat flip
-  useEffect(() => {
-    item.photos.forEach((p) => { if (p.src) new Image().src = p.src })
-  }, [item])
-
-  const flip = () => {
-    if (busy || N < 2) return
-    setBusy(true)
-    const next = flips + 1
-    setFlips(next)
-    // setelah flip selesai, sisi yang tersembunyi diisi foto berikutnya (loop ke foto 1 setelah foto 4)
-    setTimeout(() => {
-      if (next % 2 === 1) setFront((back + 1) % N)
-      else setBack((front + 1) % N)
-      setBusy(false)
-    }, FLIP_MS)
+  const shoot = () => {
+    if (N < 2) return
+    const next = (idx + 1) % N
+    setPrev(idx)
+    setRew(next === 0)
+    setIdx(next)
+    setSnap((s) => s + 1)
   }
 
-  const ghostA = item.photos[(current + 1) % N]
-  const ghostB = item.photos[(current + 2) % N]
-  const ghostStyle = (p) => ({
-    '--h': p.hue,
-    backgroundImage: p.src ? `url(${p.src})` : undefined,
-  })
-
   return (
-    <button
-      type="button"
-      className={`gcard ${busy ? 'is-busy' : ''}`}
-      style={{ '--i': i, '--flips': flips }}
-      onClick={flip}
-      aria-label={`${item.alt}. Foto ${current + 1} dari ${N}. Klik untuk melihat foto berikutnya.`}
-    >
-      <span className="gcard__ghost gcard__ghost--a" style={ghostStyle(ghostA)} aria-hidden="true" />
-      <span className="gcard__ghost gcard__ghost--b" style={ghostStyle(ghostB)} aria-hidden="true" />
+    <li className="gl-li" style={{ '--i': i }}>
+      <button type="button" className="gl-btn" onClick={shoot}
+        aria-label={`${item.alt}. Foto ${idx + 1} dari ${N}. Tekan untuk melihat foto berikutnya.`}>
+        <span className="gl-fr">
+          {prev >= 0 && pic(item.photos[prev], 'gl-pic gl-pic--prev', '', `p-${snap}`)}
+          {pic(item.photos[idx], `gl-pic gl-pic--cur ${snap > 0 ? 'is-adv' : ''} ${rew ? 'is-rew' : ''}`, `${item.alt} (foto ${idx + 1})`, `c-${snap}`)}
+          {snap > 0 && <i key={snap} className="gl-flash" aria-hidden="true" />}
+          <i className="gl-br gl-br--a" aria-hidden="true" /><i className="gl-br gl-br--b" aria-hidden="true" />
+          <i className="gl-br gl-br--c" aria-hidden="true" /><i className="gl-br gl-br--d" aria-hidden="true" />
+          <span className="gl-hint" aria-hidden="true">KLIK = JEPRET</span>
+        </span>
 
-      <span className="gcard__lift">
-        <span className="gcard__flip">
-          <span className="gcard__face gcard__face--front">
-            <Face photo={item.photos[front]} alt={`${item.alt} (foto ${front + 1})`} />
-          </span>
-          <span className="gcard__face gcard__face--back">
-            <Face photo={item.photos[back]} alt={`${item.alt} (foto ${back + 1})`} />
+        <span className="gl-cap">
+          <b className="gl-no">{pad(i + 1)}</b>
+          <span className="gl-alt">{item.alt}</span>
+          <span className="gl-pips" aria-hidden="true">
+            {item.photos.map((_, k) => <i key={k} className={k === idx ? 'on' : ''} />)}
           </span>
         </span>
-        <span className="gcard__gloss" aria-hidden="true" />
-        <span className="gcard__pill" aria-hidden="true">
-          <span className="gcard__dots">
-            {item.photos.map((_, k) => <i key={k} className={k === current ? 'on' : ''} />)}
-          </span>
-          <b>KLIK</b>
-        </span>
-      </span>
-    </button>
+      </button>
+    </li>
   )
 }
 
 export default function Gallery() {
-  const headRef = useReveal(0.3)
-  const gridRef = useReveal(0.08)
+  const headRef = useReveal(0.25)
+  const gridRef = useReveal(0.06)
+
+  // tiap cetakan melayang dengan kecepatan berbeda saat discroll (satu variabel saja, murah)
+  useEffect(() => {
+    const el = gridRef.current
+    if (!el || reduced()) return
+    let raf = 0
+    const on = () => {
+      raf = 0
+      const r = el.getBoundingClientRect()
+      const v = clamp((r.top + r.height / 2 - window.innerHeight / 2) / (window.innerHeight * 0.9 + r.height / 2), -1, 1)
+      el.style.setProperty('--sy', v.toFixed(3))
+    }
+    const h = () => { if (!raf) raf = requestAnimationFrame(on) }
+    on()
+    window.addEventListener('scroll', h, { passive: true })
+    window.addEventListener('resize', h)
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('scroll', h); window.removeEventListener('resize', h) }
+  }, [gridRef])
+
+  // judul: dua kata pertama kondensed, sisanya serif miring
+  const words = galleryIntro.title.split(' ')
+  const lead = words.slice(0, 2).join(' ')
+  const serif = `${words.slice(2).join(' ').toLowerCase()}.`
+  const frames = gallery.reduce((n, g) => n + g.photos.length, 0)
 
   return (
-    <section id="snap" className="sg">
-      <header ref={headRef} className="sg__head reveal-group reveal-group--scroll">
-        <div className="reveal-child" style={{ '--i': 0 }}>
-          <p className="sg__eyebrow">{galleryIntro.eyebrow}</p>
-          <h2 className="sg__title">{galleryIntro.title}</h2>
+    <section id="snap" className="gl">
+      <header ref={headRef} className="gl-head">
+        <div>
+          <p className="gl-eyebrow">{galleryIntro.eyebrow}</p>
+          <h2 className="gl-title" aria-label={galleryIntro.title}>
+            <span className="gl-t1" aria-hidden="true"><span>{lead}</span></span>
+            <span className="gl-t2" aria-hidden="true"><span>{serif}</span></span>
+          </h2>
         </div>
-        <p className="sg__text reveal-child" style={{ '--i': 1 }}>{galleryIntro.text}</p>
+        <p className="gl-lead">{galleryIntro.text}</p>
       </header>
 
-      <div ref={gridRef} className="sg__grid">
-        {gallery.map((item, i) => <GalleryCard key={item.id} item={item} i={i} />)}
-      </div>
+      <ul ref={gridRef} className="gl-grid">
+        {gallery.map((item, i) => <Tile key={item.id} item={item} i={i} />)}
+      </ul>
+
+      <p className="gl-foot" aria-hidden="true">
+        <span>{pad(gallery.length)} SERI</span><i /><span>{pad(frames)} FRAME</span><i /><span>KLIK UNTUK MENJEPRET</span>
+      </p>
     </section>
   )
 }

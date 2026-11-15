@@ -1,77 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Geist:wght@300..700&family=Geist+Mono:wght@300..700&family=Instrument+Serif:ital@1&display=swap');
+
 /* ============================================================
-   SECTION 4 — SNAP & MEDIA SHOWCASE (kartu foto 3D, flip 4 sisi)
+   SECTION 4 — SNAP & MEDIA SHOWCASE: cetakan foto di meja gelap
+   Palet #000 · #6D001A · #fff. Foto tampil dengan warna aslinya.
    ============================================================ */
-.sg { max-width: 1480px; margin: 0 auto; padding: clamp(40px, 6vw, 88px) clamp(20px, 4vw, 48px) clamp(72px, 9vw, 130px); }
-.sg__head { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 24px 56px; align-items: end; margin-bottom: clamp(28px, 3.5vw, 44px); }
-.sg__eyebrow { margin: 0 0 10px; font: 700 0.8rem/1 var(--font-mono); letter-spacing: 0.1em; color: var(--blue); }
-.sg__title { margin: 0; font: 800 clamp(1.8rem, 4vw, 3rem)/1.05 var(--font-display); letter-spacing: -0.025em; }
-.sg__text { margin: 0; max-width: 52ch; font-size: 1rem; line-height: 1.6; color: var(--muted); }
-
-.sg__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
-
-/* ---- kartu ---- */
-.gcard {
-  position: relative; display: block; width: 100%; aspect-ratio: 4 / 5; padding: 0; border: 0; background: none;
-  font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent;
-  --peek: 0deg;
-  /* masuk seperti kartu yang dibagikan: berputar dari samping (jeda sampai grid terlihat) */
-  animation: gdeal 0.9s var(--ease) backwards; animation-delay: calc(var(--i) * 80ms); animation-play-state: paused;
+.gl {
+  --wine: #6D001A; --pad: clamp(20px, 4vw, 56px);
+  --f-title: 'Archivo', 'Arial Narrow', Impact, sans-serif; --f-serif: 'Instrument Serif', Georgia, serif;
+  --f-body: 'Geist', 'Helvetica Neue', Arial, sans-serif; --f-mono: 'Geist Mono', ui-monospace, Menlo, monospace;
+  position: relative; overflow-x: clip; padding: clamp(72px, 10vw, 150px) var(--pad) clamp(56px, 7vw, 100px);
+  background: #000; color: #fff; font-family: var(--f-body);
 }
-.sg__grid.is-in .gcard { animation-play-state: running; }
-.gcard:hover, .gcard:focus-visible { z-index: 3; --peek: -11deg; }
-.gcard:focus-visible { outline: 3px solid var(--blue); outline-offset: 6px; border-radius: 22px; }
+.gl *, .gl *::before, .gl *::after { box-sizing: border-box; }
+.gl ul { margin: 0; padding: 0; list-style: none; }
 
-/* tumpukan foto di belakang: mengipas keluar saat hover, memberi tahu masih ada foto lain */
-.gcard__ghost {
-  position: absolute; inset: 0; z-index: 0; border-radius: 20px; border: 5px solid #fff;
-  background: linear-gradient(150deg, hsl(var(--h) 55% 50%), hsl(calc(var(--h) + 40) 60% 32%)) center / cover;
-  box-shadow: 0 10px 24px rgba(20, 20, 26, 0.2); opacity: 0; transform: scale(0.94);
-  transition: transform 0.65s var(--ease), opacity 0.35s;
+/* ---------- kepala ---------- */
+.gl-head { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: end; gap: 24px 6vw; margin-bottom: clamp(44px, 6vw, 90px); }
+.gl-eyebrow { margin: 0 0 clamp(16px, 2vw, 26px); font: 400 0.72rem/1 var(--f-mono); letter-spacing: 0.16em; color: rgba(255, 255, 255, 0.75); }
+.gl-title { margin: 0; font-weight: 400; }
+.gl-t1, .gl-t2 { display: block; overflow: hidden; }
+.gl-t1 { padding: 0.02em 0 0.03em; font: 900 clamp(2.8rem, 8vw, 8.6rem)/0.88 var(--f-title); font-stretch: 62%; font-variation-settings: 'wdth' 62; letter-spacing: -0.015em; text-transform: uppercase; }
+.gl-t2 { padding: 0.02em 0 0.12em; font: italic 400 clamp(3rem, 8.6vw, 9.2rem)/0.92 var(--f-serif); letter-spacing: -0.02em; }
+.gl-t1 > span, .gl-t2 > span { display: inline-block; transform: translateY(112%); }
+.gl-head.is-in .gl-t1 > span { transform: none; transition: transform 1.15s var(--ease); }
+.gl-head.is-in .gl-t2 > span { transform: none; transition: transform 1.15s var(--ease) 0.12s; }
+.gl-lead { margin: 0; max-width: 38ch; font: 300 clamp(1rem, 1.15vw, 1.1rem)/1.65 var(--f-body); color: rgba(255, 255, 255, 0.86); }
+
+/* ---------- meja: tata letak tidak seragam, tinggi-rendah berselang ---------- */
+.gl-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; column-gap: clamp(14px, 2vw, 32px); row-gap: clamp(40px, 5.5vw, 90px); }
+.gl-li { transform: translateY(calc(var(--sy, 0) * var(--k, 0) * 1px)); }
+.gl-li:nth-child(8n + 1) { grid-column: 1 / span 5; --k: -30; }
+.gl-li:nth-child(8n + 2) { grid-column: 6 / span 3; margin-top: clamp(50px, 8vw, 130px); --k: 46; }
+.gl-li:nth-child(8n + 3) { grid-column: 9 / span 4; margin-top: clamp(16px, 2.4vw, 40px); --k: -18; }
+.gl-li:nth-child(8n + 4) { grid-column: 1 / span 3; --k: 24; }
+.gl-li:nth-child(8n + 5) { grid-column: 4 / span 5; margin-top: clamp(40px, 6vw, 100px); --k: -44; }
+.gl-li:nth-child(8n + 6) { grid-column: 9 / span 4; margin-top: clamp(10px, 1.6vw, 28px); --k: 20; }
+.gl-li:nth-child(8n + 7) { grid-column: 2 / span 4; --k: -26; }
+.gl-li:nth-child(8n + 8) { grid-column: 7 / span 5; margin-top: clamp(40px, 6vw, 96px); --k: 38; }
+.gl-li:nth-child(8n + 1) .gl-fr { aspect-ratio: 4 / 5; }
+.gl-li:nth-child(8n + 2) .gl-fr { aspect-ratio: 3 / 4; }
+.gl-li:nth-child(8n + 3) .gl-fr { aspect-ratio: 1 / 1; }
+.gl-li:nth-child(8n + 4) .gl-fr { aspect-ratio: 3 / 4; }
+.gl-li:nth-child(8n + 5) .gl-fr { aspect-ratio: 4 / 3; }
+.gl-li:nth-child(8n + 6) .gl-fr { aspect-ratio: 4 / 5; }
+.gl-li:nth-child(8n + 7) .gl-fr { aspect-ratio: 4 / 5; }
+.gl-li:nth-child(8n + 8) .gl-fr { aspect-ratio: 5 / 4; }
+
+.gl-btn { display: block; width: 100%; padding: 0; border: 0; background: none; color: #fff; font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.gl-btn:focus-visible { outline: 2px solid #fff; outline-offset: 8px; }
+
+/* bingkai cetakan: muncul menyapu dari bawah, bergantian */
+.gl-fr { position: relative; display: block; overflow: hidden; width: 100%; background: #000; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.28); clip-path: inset(100% 0 0 0); transition: box-shadow 0.45s var(--ease), transform 0.45s var(--ease); }
+.gl-grid.is-in .gl-fr { clip-path: inset(0); transition: clip-path 1.2s var(--ease) calc(var(--i) * 110ms), box-shadow 0.45s var(--ease), transform 0.45s var(--ease); }
+.gl-btn:hover .gl-fr, .gl-btn:focus-visible .gl-fr { transform: translate(-5px, -5px); box-shadow: 9px 9px 0 var(--wine), 0 0 0 1px #fff; }
+
+.gl-pic { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; user-select: none; }
+.gl-pic.is-adv { animation: gl-adv 0.7s var(--ease); }
+.gl-pic.is-adv.is-rew { animation-name: gl-rew; }
+.gl-ph { display: grid; place-items: end start; padding: 14px; background-color: var(--wine); background-image: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0 2px, transparent 2px 14px); font: 400 0.66rem/1 var(--f-mono); letter-spacing: 0.12em; }
+.gl-flash { position: absolute; inset: 0; z-index: 4; pointer-events: none; background: #fff; opacity: 0; animation: gl-flash 0.6s ease-out; }
+
+/* tanda bidik muncul & menyempit saat disentuh */
+.gl-br { position: absolute; z-index: 3; width: 22px; height: 22px; border: 0 solid #fff; opacity: 0; pointer-events: none; transition: opacity 0.35s ease, inset 0.5s var(--ease); }
+.gl-br--a { top: 16px; left: 16px; border-top-width: 1.5px; border-left-width: 1.5px; }
+.gl-br--b { top: 16px; right: 16px; border-top-width: 1.5px; border-right-width: 1.5px; }
+.gl-br--c { bottom: 16px; left: 16px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+.gl-br--d { bottom: 16px; right: 16px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+.gl-btn:hover .gl-br, .gl-btn:focus-visible .gl-br { opacity: 1; }
+.gl-btn:hover .gl-br--a, .gl-btn:focus-visible .gl-br--a { top: 10px; left: 10px; }
+.gl-btn:hover .gl-br--b, .gl-btn:focus-visible .gl-br--b { top: 10px; right: 10px; }
+.gl-btn:hover .gl-br--c, .gl-btn:focus-visible .gl-br--c { bottom: 10px; left: 10px; }
+.gl-btn:hover .gl-br--d, .gl-btn:focus-visible .gl-br--d { bottom: 10px; right: 10px; }
+.gl-hint { position: absolute; z-index: 3; top: 22px; left: 50%; padding: 7px 10px; background: #000; font: 400 0.62rem/1 var(--f-mono); letter-spacing: 0.14em; white-space: nowrap; opacity: 0; transform: translate(-50%, -6px); transition: opacity 0.35s ease, transform 0.45s var(--ease); pointer-events: none; }
+.gl-btn:hover .gl-hint, .gl-btn:focus-visible .gl-hint { opacity: 1; transform: translate(-50%, 0); }
+
+/* keterangan di bawah cetakan */
+.gl-cap { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 14px; padding-top: 14px; }
+.gl-no { font: 900 clamp(1.6rem, 2.6vw, 2.4rem)/1 var(--f-title); font-stretch: 62%; font-variation-settings: 'wdth' 62; letter-spacing: -0.01em; }
+.gl-alt { font: 400 0.7rem/1.4 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.78); }
+.gl-pips { display: flex; gap: 5px; align-self: center; }
+.gl-pips i { width: 9px; height: 9px; border: 1px solid rgba(255, 255, 255, 0.7); transition: background 0.3s, transform 0.4s var(--ease); }
+.gl-pips i.on { background: #fff; transform: scale(1.15); }
+
+.gl-foot { display: flex; align-items: center; gap: 16px; margin: clamp(48px, 6vw, 90px) 0 0; font: 400 0.68rem/1 var(--f-mono); letter-spacing: 0.16em; color: rgba(255, 255, 255, 0.72); }
+.gl-foot i { width: 6px; height: 6px; background: var(--wine); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7); }
+
+@keyframes gl-adv { from { clip-path: inset(0 0 0 100%); } }
+@keyframes gl-rew { from { clip-path: inset(0 100% 0 0); } }
+@keyframes gl-flash { 0% { opacity: 0.95; } 100% { opacity: 0; } }
+
+/* ---------- HP ---------- */
+@media (max-width: 800px) {
+  .gl-head { grid-template-columns: 1fr; }
+  .gl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 34px; }
+  .gl-grid .gl-li:nth-child(n) { grid-column: auto; margin-top: 0; transform: none; }
+  .gl-grid .gl-li:nth-child(n) .gl-fr { aspect-ratio: 4 / 5; }
+  .gl-cap { grid-template-columns: auto minmax(0, 1fr); row-gap: 8px; }
+  .gl-pips { grid-column: 1 / -1; }
+  .gl-alt { font-size: 0.62rem; }
 }
-.gcard:hover .gcard__ghost, .gcard:focus-visible .gcard__ghost { opacity: 1; }
-.gcard:hover .gcard__ghost--a, .gcard:focus-visible .gcard__ghost--a { transform: translate(-16px, 10px) rotate(-6deg); }
-.gcard:hover .gcard__ghost--b, .gcard:focus-visible .gcard__ghost--b { transform: translate(16px, 14px) rotate(6.5deg); transition-delay: 0.05s; }
+@media (hover: none) { .gl-hint, .gl-br { display: none; } }
 
-.gcard__lift { position: absolute; inset: 0; z-index: 1; display: block; perspective: 1100px; transition: transform 0.5s var(--ease); }
-.gcard:hover .gcard__lift, .gcard:focus-visible .gcard__lift { transform: translateY(-8px); }
-.gcard.is-busy .gcard__lift { transform: translateY(-12px) scale(1.04); }
-
-/* putaran 3D: tiap klik menambah 180° (--flips), foto di sisi belakang ikut terlihat */
-.gcard__flip {
-  position: absolute; inset: 0; display: block; transform-style: preserve-3d;
-  transform: rotateY(calc(var(--flips, 0) * 180deg + var(--peek)));
-  transition: transform 0.85s cubic-bezier(0.4, 0.1, 0.2, 1.12);
-}
-.gcard__face {
-  position: absolute; inset: 0; display: block; overflow: hidden; border-radius: 20px; background: #1c1c24;
-  box-shadow: 0 18px 44px rgba(20, 20, 26, 0.2);
-  backface-visibility: hidden; -webkit-backface-visibility: hidden;
-}
-.gcard__face--back { transform: rotateY(180deg); }
-.gcard__face img { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; }
-
-.gcard__ph { display: grid; place-items: end start; width: 100%; height: 100%; padding: 18px; background: linear-gradient(150deg, hsl(var(--h) 55% 50%), hsl(calc(var(--h) + 40) 60% 32%)); color: rgba(255, 255, 255, 0.85); font: 700 0.75rem/1 var(--font-mono); letter-spacing: 0.08em; }
-
-/* kilap cahaya menyapu sekali saat kursor masuk */
-.gcard__gloss { position: absolute; inset: 0; z-index: 2; display: block; overflow: hidden; border-radius: 20px; pointer-events: none; }
-.gcard__gloss::before { content: ''; position: absolute; top: -20%; bottom: -20%; left: -70%; width: 45%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.5), transparent); transform: skewX(-14deg); }
-.gcard:hover .gcard__gloss::before { animation: sweep 1s var(--ease); }
-
-/* penanda foto ke-berapa */
-.gcard__pill { position: absolute; left: 14px; bottom: 14px; z-index: 3; display: inline-flex; align-items: center; gap: 0; padding: 8px 11px; border-radius: 999px; background: rgba(20, 20, 26, 0.55); backdrop-filter: blur(8px); color: #fff; font: 700 0.65rem/1 var(--font-mono); letter-spacing: 0.1em; }
-.gcard__dots { display: inline-flex; gap: 5px; align-items: center; }
-.gcard__dots i { width: 6px; height: 6px; border-radius: 99px; background: rgba(255, 255, 255, 0.4); transition: width 0.4s var(--ease), background 0.3s; }
-.gcard__dots i.on { width: 16px; background: #fff; }
-.gcard__pill b { max-width: 0; margin-left: 0; overflow: hidden; opacity: 0; white-space: nowrap; transition: max-width 0.45s var(--ease), margin 0.45s var(--ease), opacity 0.3s; }
-.gcard:hover .gcard__pill b, .gcard:focus-visible .gcard__pill b { max-width: 48px; margin-left: 10px; opacity: 1; }
-
-@keyframes gdeal { from { opacity: 0; transform: perspective(1000px) translateY(36px) rotateY(-65deg); } to { opacity: 1; transform: none; } }
-@keyframes sweep { to { left: 130%; } }
-
-@media (max-width: 1100px) { .sg__head { grid-template-columns: 1fr; } }
-@media (max-width: 900px) { .sg__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; } }
-@media (hover: none) { .gcard__ghost { display: none; } .gcard__pill b { display: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .gcard, .gcard__flip, .gcard__lift, .gcard__ghost, .gcard__dots i { animation: none !important; transition-duration: 0.01ms !important; }
-  .gcard__gloss::before { animation: none !important; }
+  .gl *, .gl *::before, .gl *::after { animation: none !important; transition-duration: 0.01ms !important; transition-delay: 0s !important; }
+  .gl-li { transform: none; }
+  .gl-t1 > span, .gl-t2 > span { transform: none; }
+  .gl-fr { clip-path: none; }
 }
